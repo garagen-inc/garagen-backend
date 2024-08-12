@@ -21,7 +21,7 @@ export class UserService {
   }
 
   async create(name: string, password: string): Promise<UserEntity> {
-    const userEntity = this.userRepository.find({ where: { name } });
+    const userEntity = await this.userRepository.find({ where: { name } });
 
     if (userEntity) return null;
 
