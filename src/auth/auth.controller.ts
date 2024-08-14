@@ -12,7 +12,7 @@ export class AuthController {
     const logged = await this.authService.login(body);
 
     if (!logged) {
-      throwApiResponse(401, 'User or password is incorrect', 'Usuário ou senha incorretos');
+      throwApiResponse(HttpStatus.UNAUTHORIZED, 'User or password is incorrect', 'Usuário ou senha incorretos');
     }
 
     throwApiResponse(HttpStatus.OK, 'Authenticated with success', 'Autenticado com sucesso');
