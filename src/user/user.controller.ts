@@ -9,12 +9,7 @@ export class UserController {
 
   @Get()
   async list() {
-    createApiResponse(
-      200,
-      'Users has been listed',
-      'Usuários listados com sucesso',
-      await this.userService.list(),
-    );
+    createApiResponse(200, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
   }
 
   @Post('create')
@@ -24,11 +19,6 @@ export class UserController {
     if (!user) {
       createApiResponse(500, 'Failed to create user', 'Falha ao criar usuário');
     }
-    createApiResponse(
-      201,
-      'User has been created',
-      'Usuário criado com sucesso',
-      user,
-    );
+    createApiResponse(201, 'User has been created', 'Usuário criado com sucesso', user);
   }
 }

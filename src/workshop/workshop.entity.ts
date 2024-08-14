@@ -1,24 +1,21 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('user')
-export class UserEntity {
+@Entity('workshop')
+export class WorkshopEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ name: 'name', type: 'varchar', nullable: false })
   name: string;
 
-  @Column({ name: 'email', type: 'varchar', nullable: false })
-  email: string;
+  @Column({ name: 'description', type: 'varchar', nullable: false })
+  description: string;
 
-  @Column({ name: 'phone', type: 'varchar', nullable: false })
-  phone: string;
+  @Column({ name: 'address_id' })
+  address_id: string;
 
-  @Column({ name: 'cpf', type: 'varchar', nullable: false })
-  cpf: string;
-
-  @Column({ name: 'password', type: 'varchar', nullable: false })
-  password: string;
+  @Column({ name: 'description' })
+  user_id: string;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
   deletedAt: Date | null;
