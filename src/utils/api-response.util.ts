@@ -1,13 +1,15 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 
-export function throwApiResponse(status: HttpStatus, devMessage: string, message: string, data?: any) {
-  throw new HttpException(
-    {
-      statusCode: status,
-      devMessage,
-      message,
-      data,
-    },
-    status,
-  );
+export class ResponseDTO {
+  status: HttpStatus;
+  devMessage: string;
+  message: string;
+  data: any;
+
+  constructor(status: HttpStatus, devMessage: string, message: string, data?: any) {
+    this.status = status;
+    this.devMessage = devMessage;
+    this.message = message;
+    if (data) this.data = data;
+  }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpException, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { throwApiResponse } from 'src/utils/api-response.util';
+import { ResponseDTO } from 'src/utils/api-response.util';
 import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
@@ -12,9 +12,9 @@ export class AuthController {
     const logged = await this.authService.login(body);
 
     if (!logged) {
-      throwApiResponse(HttpStatus.UNAUTHORIZED, 'User or password is incorrect', 'Usuário ou senha incorretos');
+      return new ResponseDTO(HttpStatus.UNAUTHORIZED, 'User or password is incorrect', 'Usuário ou senha incorretos');
     }
 
-    throwApiResponse(HttpStatus.OK, 'Authenticated with success', 'Autenticado com sucesso');
+    return new ResponseDTO(HttpStatus.OK, 'Authenticated with success', 'Autenticado com sucesso');
   }
 }

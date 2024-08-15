@@ -1,7 +1,6 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserEntity } from './user.entity';
-import { throwApiResponse } from 'src/utils/api-response.util';
+import { ResponseDTO } from 'src/utils/api-response.util';
 
 @Controller('users')
 export class UserController {
@@ -9,7 +8,7 @@ export class UserController {
 
   @Get()
   async list() {
-    throwApiResponse(200, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
+    return new ResponseDTO(200, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
   }
 
   @Post('create')
@@ -17,8 +16,8 @@ export class UserController {
     const { name, password } = body;
     const user = await this.userService.create(name, password);
     if (!user) {
-      throwApiResponse(500, 'Failed to create user', 'Falha ao criar usuário');
+      return new ResponseDTO(500, 'Failed to create user', 'Falha ao criar usuário');
     }
-    throwApiResponse(201, 'User has been created', 'Usuário criado com sucesso', user);
+    return new ResponseDTO(201, 'User has been created', 'Usuário criado com sucesso', user);
   }
 }
