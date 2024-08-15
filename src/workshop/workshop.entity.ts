@@ -1,4 +1,8 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { AddressEntity } from 'src/address/address.entity';
+import { AppointmentEntity } from 'src/appointment/appointment.entity';
+import { AvailableSlotEntity } from 'src/available-slot/available-slot.entity';
+import { UserEntity } from 'src/user/user.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('workshop')
 export class WorkshopEntity {
@@ -11,11 +15,20 @@ export class WorkshopEntity {
   @Column({ name: 'description', type: 'varchar', nullable: false })
   description: string;
 
-  @Column({ name: 'address_id' })
-  address_id: string;
+  @OneToMany(() => UserEntity, (user) => user.workshop)
+  @JoinColumn([{ name: 'id', referencedColumnName: 'workshop_id' }])
+  users: UserEntity[];
 
-  @Column({ name: 'description' })
-  user_id: string;
+  @OneToMany(() => AvailableSlotEntity, (availableSlot) => availableSlot.workshop)
+  @JoinColumn([{ name: 'id', referencedColumnName: 'workshop_id' }])
+  availableSlots: AvailableSlotEntity[];
+
+  @OneToMany(() => AppointmentEntity, (appointment) => appointment.workshop)
+  @JoinColumn([{ name: 'id', referencedColumnName: 'workshop_id' }])
+  appointments: AppointmentEntity[];
+
+  @OneToOne(() => AddressEntity, (address) => address.workshop)
+  address: AddressEntity;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
   deletedAt: Date | null;

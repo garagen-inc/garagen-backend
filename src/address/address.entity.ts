@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { WorkshopEntity } from 'src/workshop/workshop.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('address')
 export class AddressEntity {
@@ -19,6 +20,9 @@ export class AddressEntity {
 
   @Column({ name: 'state', type: 'varchar', nullable: false })
   state: string;
+
+  @OneToOne(() => WorkshopEntity, (workshop) => workshop.address)
+  workshop: WorkshopEntity;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
   deletedAt: Date | null;

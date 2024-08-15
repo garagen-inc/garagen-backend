@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { UserEntity } from 'src/user/user.entity';
+import { WorkshopEntity } from 'src/workshop/workshop.entity';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('appointment')
 export class AppointmentEntity {
@@ -14,8 +16,16 @@ export class AppointmentEntity {
   @Column({ name: 'user_id' })
   user_id: number;
 
+  @ManyToOne(() => UserEntity, (user) => user.appointments)
+  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
+  user: UserEntity;
+
   @Column({ name: 'workshop_id' })
   workshop_id: number;
+
+  @ManyToOne(() => WorkshopEntity, (workshop) => workshop.appointments)
+  @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
+  workshop: WorkshopEntity;
 
   @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
   deletedAt: Date | null;
