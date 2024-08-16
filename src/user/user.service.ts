@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
+import { CreateUserDTO } from './dtos/create-user.dto';
+import { UserDTO } from './dtos/user.dto';
 
 @Injectable()
 export class UserService {
@@ -13,24 +15,19 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  async list(): Promise<UserEntity[]> {
-    return (await this.userRepository.find()).map((u) => {
-      delete u.password;
-      return u;
-    });
+  async list(): Promise<UserDTO[]> {
+    const users = await this.userRepository.find();
+    return users.map((u) => new UserDTO(u.id, u.name, u.email, u.phone, u.cpf, u.workshop_id, u.workshop, u.appointments));
   }
 
-  async create(name: string, password: string): Promise<UserEntity> {
-    const userEntity = await this.userRepository.find({ where: { name } });
+  async create(data: CreateUserDTO): Promise<UserDTO> {
+    const userEntity = await this.userRepository.find({ where: { cpf: data.cpf } });
+    if (userEntity[0]) return null;
 
-    if (userEntity) return null;
-
-    const user = new UserEntity();
-    user.name = name;
-    user.password = await bcrypt.hash(password, this.saltRounds);
-
+    const user = data;
+    user.password = await bcrypt.hash(data.password, this.saltRounds);
     const userCreated = await this.userRepository.save(user);
-    delete userCreated.password;
-    return userCreated;
+
+    return new UserDTO(userCreated.id, userCreated.name, userCreated.email, userCreated.phone, userCreated.cpf, userCreated.workshop_id, userCreated.workshop, userCreated.appointments);
   }
 }

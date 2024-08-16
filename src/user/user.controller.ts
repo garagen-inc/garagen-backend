@@ -1,6 +1,7 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpStatus } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResponseDTO } from 'src/utils/api-response.util';
+import { CreateUserDTO } from './dtos/create-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -8,16 +9,15 @@ export class UserController {
 
   @Get()
   async list() {
-    return new ResponseDTO(200, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
+    return new ResponseDTO(HttpStatus.OK, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
   }
 
   @Post('create')
-  async createUser(@Body() body: { name: string; password: string }) {
-    const { name, password } = body;
-    const user = await this.userService.create(name, password);
+  async createUser(@Body() body: CreateUserDTO) {
+    const user = await this.userService.create(body);
     if (!user) {
-      return new ResponseDTO(500, 'Failed to create user', 'Falha ao criar usuário');
+      return new ResponseDTO(HttpStatus.BAD_REQUEST, 'Failed to create user', 'Falha ao criar usuário');
     }
-    return new ResponseDTO(201, 'User has been created', 'Usuário criado com sucesso', user);
+    return new ResponseDTO(HttpStatus.CREATED, 'User has been created', 'Usuário criado com sucesso', user);
   }
 }

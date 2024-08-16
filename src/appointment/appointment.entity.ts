@@ -7,10 +7,10 @@ export class AppointmentEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'start_time', type: 'timestamp', nullable: false })
+  @Column({ name: 'start_time', type: 'text', nullable: false })
   start_time: Date;
 
-  @Column({ name: 'final_time', type: 'timestamp', nullable: false })
+  @Column({ name: 'final_time', type: 'text', nullable: false })
   final_time: Date;
 
   @Column({ name: 'user_id' })
@@ -27,19 +27,19 @@ export class AppointmentEntity {
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
   workshop: WorkshopEntity;
 
-  @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
+  @DeleteDateColumn({ type: 'text', name: 'deleted_at' })
   deletedAt: Date | null;
 
   @CreateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'created_at',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'updated_at',
     update: true,
   })

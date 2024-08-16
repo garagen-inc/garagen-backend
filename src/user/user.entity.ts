@@ -23,7 +23,7 @@ export class UserEntity {
   password: string;
 
   @Column({ name: 'workshop_id', nullable: true })
-  workshop_id: string;
+  workshop_id?: string;
 
   @ManyToOne(() => WorkshopEntity, (workshop) => workshop.users)
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
@@ -33,19 +33,19 @@ export class UserEntity {
   @JoinColumn([{ name: 'id', referencedColumnName: 'user_id' }])
   appointments: AppointmentEntity[];
 
-  @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
+  @DeleteDateColumn({ type: 'text', name: 'deleted_at' })
   deletedAt: Date | null;
 
   @CreateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'created_at',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'updated_at',
     update: true,
   })

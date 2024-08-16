@@ -30,19 +30,19 @@ export class WorkshopEntity {
   @OneToOne(() => AddressEntity, (address) => address.workshop)
   address: AddressEntity;
 
-  @DeleteDateColumn({ type: 'timestamp with time zone', name: 'deleted_at' })
+  @DeleteDateColumn({ type: 'text', name: 'deleted_at' })
   deletedAt: Date | null;
 
   @CreateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'created_at',
   })
   createdAt: Date;
 
   @UpdateDateColumn({
     default: () => 'CURRENT_TIMESTAMP',
-    type: 'timestamp with time zone',
+    type: 'text',
     name: 'updated_at',
     update: true,
   })
