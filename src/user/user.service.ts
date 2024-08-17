@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDTO } from './dtos/create-user.dto';
@@ -29,5 +29,11 @@ export class UserService {
     const userCreated = await this.userRepository.save(user);
 
     return new UserDTO(userCreated.id, userCreated.name, userCreated.email, userCreated.phone, userCreated.cpf, userCreated.workshop_id, userCreated.workshop, userCreated.appointments);
+  }
+
+  async find(options?: FindManyOptions<UserEntity>): Promise<UserDTO | null> {
+    const userEntity = await this.userRepository.findOne(options);
+    if (userEntity) return new UserDTO(userEntity.id, userEntity.name, userEntity.email, userEntity.phone, userEntity.cpf, userEntity.workshop_id, userEntity.workshop, userEntity.appointments);
+    return null;
   }
 }

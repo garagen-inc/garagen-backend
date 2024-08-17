@@ -26,7 +26,7 @@ export class AuthService {
       {
         payload: new TokenPayloadDTO(user.id, user.email, user.cpf),
       },
-      { secret: 'segredo' }, // add to .env
+      { secret: process.env.JWT_SECRET },
     );
   }
 
