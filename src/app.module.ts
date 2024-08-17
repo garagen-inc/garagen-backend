@@ -1,10 +1,33 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UserEntity } from './user/user.entity';
+import { UserModule } from './user/user.module';
+import { WorkshopEntity } from './workshop/workshop.entity';
+import { AvailableSlotEntity } from './available-slot/available-slot.entity';
+import { AppointmentEntity } from './appointment/appointment.entity';
+import { AddressEntity } from './address/address.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './guards/auth.guard';
+import { JwtService } from '@nestjs/jwt';
+import { UserService } from './user/user.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'sqlite',
+      database: 'database.sqlite',
+      entities: [UserEntity, WorkshopEntity, AvailableSlotEntity, AppointmentEntity, AddressEntity],
+      synchronize: true,
+    }),
+    TypeOrmModule.forFeature([UserEntity, WorkshopEntity, AvailableSlotEntity, AppointmentEntity, AddressEntity]),
+    AuthModule,
+    UserModule,
+  ],
+  providers: [JwtService, UserService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}
