@@ -15,6 +15,12 @@ export class WorkshopEntity {
   @Column({ name: 'description', type: 'varchar', nullable: false })
   description: string;
 
+  @Column({ name: 'workshop_image', type: 'varchar', nullable: true })
+  profileImage: string | null;
+
+  @OneToOne(() => AddressEntity, (address) => address.workshop)
+  address: AddressEntity;
+
   @OneToMany(() => UserEntity, (user) => user.workshop)
   @JoinColumn([{ name: 'id', referencedColumnName: 'workshop_id' }])
   users: UserEntity[];
@@ -26,9 +32,6 @@ export class WorkshopEntity {
   @OneToMany(() => AppointmentEntity, (appointment) => appointment.workshop)
   @JoinColumn([{ name: 'id', referencedColumnName: 'workshop_id' }])
   appointments: AppointmentEntity[];
-
-  @OneToOne(() => AddressEntity, (address) => address.workshop)
-  address: AddressEntity;
 
   @DeleteDateColumn({ type: 'text', name: 'deleted_at' })
   deletedAt: Date | null;

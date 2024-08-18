@@ -23,7 +23,7 @@ export class UserEntity {
   password: string;
 
   @Column({ name: 'workshop_id', nullable: true })
-  workshop_id?: string;
+  workshop_id?: number;
 
   @ManyToOne(() => WorkshopEntity, (workshop) => workshop.users)
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])

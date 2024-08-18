@@ -39,7 +39,7 @@ export class AuthService {
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const access_token = await this.generateAccessToken(user);
-      const userDTO = new UserDTO(user.id, user.name, user.email, user.phone, user.cpf, user.workshop_id, user.workshop);
+      const userDTO = new UserDTO(user.id, user.name, user.email, user.phone, user.cpf, !!user.workshop_id, user.workshop_id, user.workshop);
       return new LoginResponseDTO(access_token, userDTO);
     } else {
       return null;

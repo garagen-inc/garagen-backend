@@ -3,9 +3,9 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { TokenPayloadDTO } from 'src/auth/dto/token-payload.dto';
 import { UserService } from 'src/user/user.service';
-import { ExceptionReasonDTO } from 'src/utils/dtos/exception-reason.dto.';
+import { ExceptionReasonDTO } from 'src/utils/dtos/exception-reason.dto';
 import { ExceptionDTO } from 'src/utils/dtos/exception.dto';
-import { UnauthorizedError } from 'src/utils/errors/common.errors';
+import { UnauthorizedException } from 'src/utils/exceptions/common.exception';
 import { BearerTokenProcessor } from 'src/utils/functions/bearer-token-processor.function';
 
 @Injectable()
@@ -57,10 +57,10 @@ export class AuthGuard {
         if (!bearerTokenProcessor.isSignatureValid())
           throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('JWT', 'Signature is invalid or token already expired', 'Assinatura inválida ou token já expirado'), HttpStatus.UNAUTHORIZED);
 
-        const userDto = await this.userService.find({ where: { id: bearerTokenProcessor?.payload?.id, cpf: bearerTokenProcessor?.payload?.cpf, email: bearerTokenProcessor?.payload?.email } });
-        if (!userDto) throw UnauthorizedError;
+        const userEntity = await this.userService.find({ where: { id: bearerTokenProcessor?.payload?.id, cpf: bearerTokenProcessor?.payload?.cpf, email: bearerTokenProcessor?.payload?.email } });
+        if (!userEntity) throw UnauthorizedException;
 
-        return new TokenPayloadDTO(userDto.id, userDto.email, userDto.cpf);
+        return new TokenPayloadDTO(userEntity.id, userEntity.email, userEntity.cpf);
       }
       default:
         throw ExceptionDTO.withError(
