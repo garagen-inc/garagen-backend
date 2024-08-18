@@ -12,6 +12,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from './user/user.service';
 import { ConfigModule } from '@nestjs/config';
+import { WorkshopModule } from './workshop/workshop.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forFeature([UserEntity, WorkshopEntity, AvailableSlotEntity, AppointmentEntity, AddressEntity]),
     AuthModule,
     UserModule,
+    WorkshopModule,
   ],
   providers: [JwtService, UserService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
