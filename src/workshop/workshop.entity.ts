@@ -16,7 +16,7 @@ export class WorkshopEntity {
   description: string;
 
   @Column({ name: 'workshop_image', type: 'varchar', nullable: true })
-  profileImage: string | null;
+  workshopImage: string | null;
 
   @OneToOne(() => AddressEntity, (address) => address.workshop)
   address: AddressEntity;

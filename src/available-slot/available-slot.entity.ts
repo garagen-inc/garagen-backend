@@ -7,13 +7,13 @@ export class AvailableSlotEntity {
   id: number;
 
   @Column({ name: 'start_time', type: 'text', nullable: false })
-  start_time: Date;
+  startTime: Date;
 
   @Column({ name: 'final_time', type: 'text', nullable: false })
-  final_time: Date;
+  finalTime: Date;
 
   @Column({ name: 'workshop_id' })
-  workshop_id: number;
+  workshopId: number;
 
   @ManyToOne(() => WorkshopEntity, (workshop) => workshop.availableSlots)
   @JoinColumn([{ name: 'workshop_id', referencedColumnName: 'id' }])
