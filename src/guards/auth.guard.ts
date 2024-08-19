@@ -33,7 +33,7 @@ export class AuthGuard {
 
   async verifyAuthorization(authorization: string | undefined): Promise<TokenPayloadDTO> {
     if (!authorization)
-      throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('Authorization header', 'Authorization header is required', 'Necessário um cabeço de autenticação'), HttpStatus.UNAUTHORIZED);
+      throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('Authorization header', 'Authorization header is required', 'Necessário um cabeçalho de autenticação'), HttpStatus.UNAUTHORIZED);
     if (!authorization.includes(' '))
       throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('Token malformed', 'Invalid authorization format', 'Formato da autorização inválido'), HttpStatus.UNAUTHORIZED);
     const [type, token] = authorization.split(' ');

@@ -22,7 +22,7 @@ export class AvailableSlotService {
   async getByWorkshop(workshopId: number): Promise<AvailableSlotDTO[]> {
     const availableSlots = await this.availableSlotEntity.find({ where: { workshopId } });
     return availableSlots.map((as) => {
-      return new AvailableSlotDTO(as.id, as.startTime, as.finalTime, as.workshopId, as.workshop);
+      return new AvailableSlotDTO(as.id, as.startTime, as.finalTime, as.workshopId);
     });
   }
 

@@ -5,13 +5,13 @@ export class AvailableSlotDTO {
   startTime: Date;
   finalTime: Date;
   workshopId: number;
-  workshop: WorkshopDTO;
+  workshop?: WorkshopDTO;
 
-  constructor(id: number, startTime: Date, finalTime: Date, workshopId: number, workshop: WorkshopDTO) {
+  constructor(id: number, startTime: Date, finalTime: Date, workshopId: number, workshop?: WorkshopDTO) {
     this.id = id;
     this.startTime = startTime;
     this.finalTime = finalTime;
     this.workshopId = workshopId;
-    this.workshop = workshop;
+    if (workshop) this.workshop = workshop;
   }
 }
