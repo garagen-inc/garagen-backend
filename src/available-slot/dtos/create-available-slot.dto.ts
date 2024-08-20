@@ -1,14 +1,15 @@
-export type AvailableSlotDays = 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat';
+import { AvailableSlotDay } from '../interfaces/available-slot-day.interface';
 
 export class CreateAvailableSlotDTO {
-  startTime: Date;
-  finalTime: Date;
+  startTime: string;
+  finalTime: string;
   workshopId: number;
-  // recurrence: AvailableSlotDays[];
+  recurrence: AvailableSlotDay[];
 
-  constructor(startTime: Date, finalTime: Date, workshopId: number) {
+  constructor(startTime: string, finalTime: string, workshopId: number, recurrence: AvailableSlotDay[]) {
     this.startTime = startTime;
     this.finalTime = finalTime;
     this.workshopId = workshopId;
+    this.recurrence = recurrence;
   }
 }
