@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { UserDTO } from './dtos/user.dto';
 import { CreateWorkshopOwnerUserDTO } from './dtos/create-workshop-owner-user.dto';
