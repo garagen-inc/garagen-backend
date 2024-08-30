@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from './user/user.service';
 import { ConfigModule } from '@nestjs/config';
 import { WorkshopModule } from './workshop/workshop.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -31,5 +32,6 @@ import { WorkshopModule } from './workshop/workshop.module';
     WorkshopModule,
   ],
   providers: [JwtService, UserService, { provide: APP_GUARD, useClass: AuthGuard }],
+  controllers: [AppController],
 })
 export class AppModule {}
