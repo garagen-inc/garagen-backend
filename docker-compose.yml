@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src
+      - /usr/src/node_modules
+      - sqlite_data:/usr/src/dist
+    environment:
+      JWT_SECRET: 3135dc1c-08d9-4fd5-b398-c60be600c57e
+
+volumes:
+  sqlite_data:

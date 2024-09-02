@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { WorkshopEntity } from 'src/workshop/workshop.entity';
 import { WorkshopDTO } from 'src/workshop/dtos/workshop.dto';
-import { AddressDTO } from 'src/address/dtos/address.dto';
 
 @Injectable()
 export class WorkshopService {
