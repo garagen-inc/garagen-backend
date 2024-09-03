@@ -98,4 +98,24 @@ export class AppointmentService {
       (appointment) => new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.workshop_id, appointment.appointment_date),
     );
   }
+
+  async findOne(appointmentId: number) {
+    const appointmentEntity = await this.appointmentRepository.findOne({ where: { id: appointmentId } });
+    if (!appointmentEntity) return undefined;
+    return new AppointmentDTO(
+      appointmentEntity.id,
+      appointmentEntity.start_time,
+      appointmentEntity.final_time,
+      appointmentEntity.user_id,
+      appointmentEntity.workshop_id,
+      appointmentEntity.appointment_date,
+    );
+  }
+
+  async delete(appointmentId: number) {
+    const appointmentEntity = await this.appointmentRepository.findOne({ where: { id: appointmentId } });
+    if (!appointmentEntity) return false;
+    await this.appointmentRepository.delete(appointmentEntity);
+    return true;
+  }
 }

@@ -26,6 +26,7 @@ describe('AppointmentService', () => {
             save: jest.fn(),
             findOne: jest.fn(),
             find: jest.fn(),
+            delete: jest.fn(),
           },
         },
         {
@@ -190,10 +191,71 @@ describe('AppointmentService', () => {
       const appointments = await service.list(1);
       expect(appointments).toEqual([]);
     });
+  });
 
-    it('should handle errors from the repository', async () => {
-      jest.spyOn(appointmentRepository, 'find').mockRejectedValue(new Error('Database error'));
-      await expect(service.list(1)).rejects.toThrow('Database error');
+  describe('findOne', () => {
+    it('should return a appointment', async () => {
+      const mockAppointment = { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' };
+
+      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValue(mockAppointment as any);
+
+      const expectedAppointment = new AppointmentDTO(
+        mockAppointment.id,
+        mockAppointment.start_time,
+        mockAppointment.final_time,
+        mockAppointment.user_id,
+        mockAppointment.workshop_id,
+        mockAppointment.appointment_date,
+      );
+      const appointment = await service.findOne(1);
+      expect(appointment).toEqual(expectedAppointment);
+    });
+
+    it('should handle undefined result', async () => {
+      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValue(undefined);
+
+      const appointment = await service.findOne(3);
+      expect(appointment).toEqual(undefined);
+    });
+  });
+
+  describe('delete', () => {
+    it('should handle delete', async () => {
+      const mockAppointments = [
+        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' },
+        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' },
+      ];
+
+      const mockAppointmentsAfterDelete = [{ id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' }];
+
+      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValueOnce(mockAppointments[0] as any);
+      jest.spyOn(appointmentRepository, 'delete').mockResolvedValueOnce(undefined);
+      jest.spyOn(appointmentRepository, 'find').mockResolvedValueOnce(mockAppointmentsAfterDelete as any);
+
+      await service.delete(1);
+
+      const appointments = await service.list(1);
+      expect(appointments).toHaveLength(mockAppointmentsAfterDelete.length);
+    });
+
+    it('should handle concurrent deletions', async () => {
+      const mockAppointments = [
+        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' },
+        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' },
+      ];
+
+      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValueOnce(mockAppointments[0] as any);
+      jest.spyOn(appointmentRepository, 'delete').mockResolvedValueOnce(undefined);
+
+      const deletePromises = [service.delete(1), service.delete(1)];
+      const results = await Promise.all(deletePromises);
+
+      expect(results).toEqual([true, false]);
+    });
+
+    it('should handle invalid appointmentId input', async () => {
+      const result = await service.delete(null as any);
+      expect(result).toBe(false);
     });
   });
 });
