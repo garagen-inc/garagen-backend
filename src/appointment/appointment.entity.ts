@@ -1,6 +1,6 @@
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { UserEntity } from 'src/user/user.entity';
 import { WorkshopEntity } from 'src/workshop/workshop.entity';
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('appointment')
 export class AppointmentEntity {
@@ -8,13 +8,16 @@ export class AppointmentEntity {
   id: number;
 
   @Column({ name: 'start_time', type: 'text', nullable: false })
-  start_time: Date;
+  start_time: string; // 00:00
 
   @Column({ name: 'final_time', type: 'text', nullable: false })
-  final_time: Date;
+  final_time: string; // 00:00
 
   @Column({ name: 'user_id' })
   user_id: number;
+
+  @Column({ name: 'appointment_date', type: 'text', nullable: false })
+  appointment_date: string; // dd/mm/yyyy
 
   @ManyToOne(() => UserEntity, (user) => user.appointments)
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])

@@ -14,6 +14,7 @@ import { UserService } from './user/user.service';
 import { ConfigModule } from '@nestjs/config';
 import { WorkshopModule } from './workshop/workshop.module';
 import { AppController } from './app.controller';
+import { AppointmentModule } from './appointment/appointment.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AppController } from './app.controller';
     AuthModule,
     UserModule,
     WorkshopModule,
+    AppointmentModule,
   ],
   providers: [JwtService, UserService, { provide: APP_GUARD, useClass: AuthGuard }],
   controllers: [AppController],
