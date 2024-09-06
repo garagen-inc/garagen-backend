@@ -7,6 +7,13 @@ async function bootstrap() {
 
   app.use(new HttpStatusMiddleware().use);
 
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
+
   await app.listen(3000, '0.0.0.0');
 }
 bootstrap();
