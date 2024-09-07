@@ -35,6 +35,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
+      relations: ['workshop'],
     });
 
     if (user && (await bcrypt.compare(password, user.password))) {
