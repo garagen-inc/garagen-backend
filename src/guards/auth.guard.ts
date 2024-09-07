@@ -61,7 +61,6 @@ export class AuthGuard {
           where: { id: bearerTokenProcessor?.payload?.id, cpf: bearerTokenProcessor?.payload?.cpf, email: bearerTokenProcessor?.payload?.email },
         });
         if (!userEntity) throw UnauthorizedException;
-        console.log(userEntity);
         return new TokenPayloadDTO(userEntity.id, userEntity.email, userEntity.cpf);
       }
       default:
