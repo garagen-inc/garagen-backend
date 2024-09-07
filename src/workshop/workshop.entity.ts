@@ -19,6 +19,7 @@ export class WorkshopEntity {
   workshopImage: string | null;
 
   @OneToOne(() => AddressEntity, (address) => address.workshop)
+  @JoinColumn()
   address: AddressEntity;
 
   @OneToMany(() => UserEntity, (user) => user.workshop)

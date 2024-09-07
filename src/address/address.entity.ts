@@ -22,6 +22,7 @@ export class AddressEntity {
   state: string;
 
   @OneToOne(() => WorkshopEntity, (workshop) => workshop.address)
+  @JoinColumn()
   workshop: WorkshopEntity;
 
   @DeleteDateColumn({ type: 'text', name: 'deleted_at' })

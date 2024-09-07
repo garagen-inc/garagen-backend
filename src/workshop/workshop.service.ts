@@ -12,7 +12,7 @@ export class WorkshopService {
   ) {}
 
   async list(): Promise<WorkshopDTO[]> {
-    const workshops = await this.workshopEntity.find();
+    const workshops = await this.workshopEntity.find({ relations: ['address'] });
     return workshops.map((w) => {
       return new WorkshopDTO(w.id, w.name, w.description, w.address);
     });
