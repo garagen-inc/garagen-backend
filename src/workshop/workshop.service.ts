@@ -17,4 +17,10 @@ export class WorkshopService {
       return new WorkshopDTO(w.id, w.name, w.description, w.address);
     });
   }
+
+  async single(workshopId: number): Promise<WorkshopDTO | null> {
+    const workshop = await this.workshopEntity.findOne({ relations: ['address'], where: { id: workshopId } });
+    if (!workshop) return null;
+    return new WorkshopDTO(workshop.id, workshop.name, workshop.description, workshop.address);
+  }
 }

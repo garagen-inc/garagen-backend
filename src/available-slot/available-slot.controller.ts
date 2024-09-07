@@ -2,6 +2,7 @@ import { Body, Controller, Get, HttpStatus, Param, Post } from '@nestjs/common';
 import { ResponseDTO } from 'src/utils/api-response.util';
 import { AvailableSlotService } from './available-slot.service';
 import { CreateAvailableSlotDTO } from './dtos/create-available-slot.dto';
+import { JWT } from 'src/decorators/jwt.decorator';
 
 @Controller('available-slot')
 export class AvailableSlotController {
@@ -12,6 +13,7 @@ export class AvailableSlotController {
     return new ResponseDTO(HttpStatus.OK, 'Available slots has been listed', 'Horários disponíveis listadas com sucesso', await this.availableSlotService.list());
   }
 
+  @JWT(false)
   @Get('workshop/:workshopId')
   async getByWorkshopId(@Param('workshopId') workshopId: number) {
     return new ResponseDTO(HttpStatus.OK, 'Available slots has been listed', 'Horários disponíveis listadas com sucesso', await this.availableSlotService.getByWorkshop(workshopId));
