@@ -44,11 +44,11 @@ export class WorkshopEntity {
   })
   createdAt: Date;
 
-  @UpdateDateColumn({
-    default: () => 'CURRENT_TIMESTAMP',
-    type: 'text',
-    name: 'updated_at',
-    update: true,
-  })
-  updatedAt: Date;
+  // @UpdateDateColumn({
+  //   default: () => 'CURRENT_TIMESTAMP',
+  //   type: 'text',
+  //   name: 'updated_at',
+  //   update: true,
+  // })
+  // updatedAt: Date;
 }
