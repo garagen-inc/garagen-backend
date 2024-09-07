@@ -56,10 +56,12 @@ export class AuthGuard {
         if (!bearerTokenProcessor.isBearerToken()) throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('JWT', 'JWT decode error', 'Formato do JWT é inválido'), HttpStatus.UNAUTHORIZED);
         if (!bearerTokenProcessor.isSignatureValid())
           throw ExceptionDTO.withError('Guard', new ExceptionReasonDTO('JWT', 'Signature is invalid or token already expired', 'Assinatura inválida ou token já expirado'), HttpStatus.UNAUTHORIZED);
-
-        const userEntity = await this.userService.find({ where: { id: bearerTokenProcessor?.payload?.id, cpf: bearerTokenProcessor?.payload?.cpf, email: bearerTokenProcessor?.payload?.email } });
+        const userEntity = await this.userService.find({
+          relations: ['workshop', 'workshop.address'],
+          where: { id: bearerTokenProcessor?.payload?.id, cpf: bearerTokenProcessor?.payload?.cpf, email: bearerTokenProcessor?.payload?.email },
+        });
         if (!userEntity) throw UnauthorizedException;
-
+        console.log(userEntity);
         return new TokenPayloadDTO(userEntity.id, userEntity.email, userEntity.cpf);
       }
       default:
