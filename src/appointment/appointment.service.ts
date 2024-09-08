@@ -88,25 +88,28 @@ export class AppointmentService {
     });
 
     const savedAppointment = await this.appointmentRepository.save(appointmentEntity);
+    const appointment = await this.appointmentRepository.findOne({ where: { id: savedAppointment.id }, relations: ['user'] });
 
-    return new AppointmentDTO(savedAppointment.id, savedAppointment.start_time, savedAppointment.final_time, savedAppointment.user_id, savedAppointment.workshop_id, savedAppointment.appointment_date);
+    return new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.user.name, appointment.workshop_id, appointment.appointment_date);
   }
 
   async list(workshopId: number) {
-    const appointmentEntities = await this.appointmentRepository.find({ where: { workshop_id: workshopId } });
+    const appointmentEntities = await this.appointmentRepository.find({ where: { workshop_id: workshopId }, relations: ['user'] });
     return appointmentEntities.map(
-      (appointment) => new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.workshop_id, appointment.appointment_date),
+      (appointment) =>
+        new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.user.name, appointment.workshop_id, appointment.appointment_date),
     );
   }
 
   async findOne(appointmentId: number) {
-    const appointmentEntity = await this.appointmentRepository.findOne({ where: { id: appointmentId } });
+    const appointmentEntity = await this.appointmentRepository.findOne({ where: { id: appointmentId }, relations: ['user'] });
     if (!appointmentEntity) return undefined;
     return new AppointmentDTO(
       appointmentEntity.id,
       appointmentEntity.start_time,
       appointmentEntity.final_time,
       appointmentEntity.user_id,
+      appointmentEntity.user.name,
       appointmentEntity.workshop_id,
       appointmentEntity.appointment_date,
     );
