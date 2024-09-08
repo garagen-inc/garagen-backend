@@ -12,6 +12,7 @@ import { WorkshopDTO } from 'src/workshop/dtos/workshop.dto';
 import { AddressEntity } from 'src/address/address.entity';
 import { CreateAddressDTO } from 'src/address/dtos/create-address.dto';
 import { AddressDTO } from 'src/address/dtos/address.dto';
+import { UpdateUserDTO } from './dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -70,6 +71,12 @@ export class UserService {
     return new UserDTO(userCreated.id, userCreated.name, userCreated.email, userCreated.phone, userCreated.cpf, true, userCreated.workshop_id, userCreated.workshop, userCreated.appointments);
   }
 
+  async delete(userId: number): Promise<boolean> {
+    const userEntity = await this.userRepository.findOne({ where: { id: userId } });
+    if (!userEntity) return false;
+
+    return !!(await this.userRepository.remove(userEntity));
+  }
   async find(options?: FindManyOptions<UserEntity>): Promise<UserDTO | null> {
     const userEntity = await this.userRepository.findOne(options);
     if (userEntity)
@@ -87,5 +94,30 @@ export class UserService {
         userEntity.appointments,
       );
     return null;
+  }
+
+  async update(updateUserDTO: UpdateUserDTO): Promise<UserDTO | null> {
+    const { name, id, cpf, email, password, phone } = updateUserDTO;
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    if (name) user.name = name;
+    if (cpf) user.cpf = cpf;
+    if (email) user.email = email;
+    if (password) user.password = password;
+    if (phone) user.phone = phone;
+
+    await this.userRepository.save(user);
+
+    const userUpdated = await this.userRepository.findOne({
+      where: { id },
+      relations: ['workshop', 'appointments'],
+    });
+    return new UserDTO(userUpdated.id, userUpdated.name, userUpdated.email, userUpdated.phone, userUpdated.cpf, true, userUpdated.workshop_id, userUpdated.workshop, userUpdated.appointments);
   }
 }

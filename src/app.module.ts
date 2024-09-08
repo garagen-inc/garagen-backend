@@ -16,6 +16,7 @@ import { WorkshopModule } from './workshop/workshop.module';
 import { AppController } from './app.controller';
 import { AppointmentModule } from './appointment/appointment.module';
 import { AvailableSlotModule } from './available-slot/available-slot.module';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AvailableSlotModule } from './available-slot/available-slot.module';
     WorkshopModule,
     AppointmentModule,
     AvailableSlotModule,
+    AddressModule,
   ],
   providers: [JwtService, UserService, { provide: APP_GUARD, useClass: AuthGuard }],
   controllers: [AppController],
