@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, HttpStatus, Patch, Delete, Req } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpStatus, Patch, Delete, Req, Param } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResponseDTO } from 'src/utils/api-response.util';
 import { CreateUserDTO } from './dtos/create-user.dto';
@@ -27,7 +27,7 @@ export class UserController {
 
   @Patch()
   async update(@Req() request: RequestHeaderType, @Body() body: UpdateUserDTO) {
-    if (request.payloadDTO.id !== body.id) return new ResponseDTO(HttpStatus.UNAUTHORIZED, 'User cant be updated, not your user.', 'Não foi possível atualizar o usuário');
+    if (String(request.payloadDTO.id) !== String(body.id)) return new ResponseDTO(HttpStatus.UNAUTHORIZED, 'User cant be updated, not your user.', 'Não foi possível atualizar o usuário');
 
     const user = await this.userService.update(body);
     if (!user) {

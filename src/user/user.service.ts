@@ -13,12 +13,16 @@ import { AddressEntity } from 'src/address/address.entity';
 import { CreateAddressDTO } from 'src/address/dtos/create-address.dto';
 import { AddressDTO } from 'src/address/dtos/address.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
+import { LoginResponseDTO } from 'src/auth/dto/login-response.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
   private readonly saltRounds = 10;
 
   constructor(
+    private readonly authService: AuthService,
+
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
     @InjectRepository(WorkshopEntity)
@@ -96,7 +100,7 @@ export class UserService {
     return null;
   }
 
-  async update(updateUserDTO: UpdateUserDTO): Promise<UserDTO | null> {
+  async update(updateUserDTO: UpdateUserDTO): Promise<LoginResponseDTO | null> {
     const { name, id, cpf, email, password, phone } = updateUserDTO;
     const user = await this.userRepository.findOne({
       where: { id },
@@ -118,6 +122,14 @@ export class UserService {
       where: { id },
       relations: ['workshop', 'appointments'],
     });
-    return new UserDTO(userUpdated.id, userUpdated.name, userUpdated.email, userUpdated.phone, userUpdated.cpf, true, userUpdated.workshop_id, userUpdated.workshop, userUpdated.appointments);
+
+    const access_token = await this.authService.generateAccessToken(user);
+
+    const loginResponse = new LoginResponseDTO(
+      access_token,
+      new UserDTO(userUpdated.id, userUpdated.name, userUpdated.email, userUpdated.phone, userUpdated.cpf, true, userUpdated.workshop_id, userUpdated.workshop, userUpdated.appointments),
+    );
+
+    return loginResponse;
   }
 }

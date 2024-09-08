@@ -11,17 +11,13 @@ import { UserDTO } from 'src/user/dtos/user.dto';
 
 @Injectable()
 export class AuthService {
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   constructor(
     private readonly jwtService: JwtService,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  private async generateAccessToken(user: UserEntity) {
+  async generateAccessToken(user: UserEntity) {
     return this.jwtService.sign(
       {
         payload: new TokenPayloadDTO(user.id, user.email, user.cpf),
