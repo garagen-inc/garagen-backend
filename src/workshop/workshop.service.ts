@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { WorkshopEntity } from 'src/workshop/workshop.entity';
 import { WorkshopDTO } from 'src/workshop/dtos/workshop.dto';
+import { EditWorkshopDTO } from './dtos/update-workshop.dto';
 
 @Injectable()
 export class WorkshopService {
@@ -22,5 +23,27 @@ export class WorkshopService {
     const workshop = await this.workshopEntity.findOne({ relations: ['address'], where: { id: workshopId } });
     if (!workshop) return null;
     return new WorkshopDTO(workshop.id, workshop.name, workshop.description, workshop.address);
+  }
+
+  async update(editWorkshopDto: EditWorkshopDTO): Promise<WorkshopDTO | null> {
+    const { workshopId, name, description } = editWorkshopDto;
+    const workshop = await this.workshopEntity.findOne({
+      where: { id: workshopId },
+    });
+
+    if (!workshop) {
+      return null;
+    }
+
+    workshop.name = name;
+    workshop.description = description;
+
+    await this.workshopEntity.save(workshop);
+
+    const workshopUpdated = await this.workshopEntity.findOne({
+      where: { id: workshopId },
+      relations: ['address'],
+    });
+    return new WorkshopDTO(workshopUpdated.id, workshopUpdated.name, workshopUpdated.description, workshopUpdated.address);
   }
 }

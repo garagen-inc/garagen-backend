@@ -2,12 +2,14 @@ import { Body, Controller, Delete, Get, HttpStatus, Param, Post } from '@nestjs/
 import { ResponseDTO } from 'src/utils/api-response.util';
 import { AppointmentService } from './appointment.service';
 import { CreateAppointmentDTO } from './dtos/create-appointment.dto';
+import { JWT } from 'src/decorators/jwt.decorator';
 
 @Controller('appointments')
 export class AppointmentController {
   constructor(private readonly appointmentService: AppointmentService) {}
 
   @Get('workshop/:workshopId')
+  @JWT(false)
   async list(@Param('workshopId') workshopId: number) {
     return new ResponseDTO(HttpStatus.OK, 'Appointments has been listed', 'Apontamentos listadas com sucesso', await this.appointmentService.list(workshopId));
   }
@@ -23,6 +25,7 @@ export class AppointmentController {
   }
 
   @Get(':appointmentId')
+  @JWT(false)
   async findAppointment(@Param('appointmentId') appointmentId: number) {
     const appointment = await this.appointmentService.findOne(appointmentId);
     if (!appointment) {

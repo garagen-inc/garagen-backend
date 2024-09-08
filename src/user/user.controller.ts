@@ -1,9 +1,11 @@
-import { Controller, Post, Body, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpStatus, Patch, Delete, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResponseDTO } from 'src/utils/api-response.util';
 import { CreateUserDTO } from './dtos/create-user.dto';
 import { JWT } from 'src/decorators/jwt.decorator';
 import { CreateWorkshopOwnerUserDTO } from './dtos/create-workshop-owner-user.dto';
+import { UpdateUserDTO } from './dtos/update-user.dto';
+import { RequestHeaderType } from 'src/utils/types/types';
 
 @Controller('users')
 export class UserController {
@@ -12,6 +14,26 @@ export class UserController {
   @Get()
   async list() {
     return new ResponseDTO(HttpStatus.OK, 'Users has been listed', 'Usuários listados com sucesso', await this.userService.list());
+  }
+
+  @Delete()
+  async delete(@Req() request: RequestHeaderType) {
+    const userHasBeenDeleted = await this.userService.delete(request.payloadDTO.id);
+    if (userHasBeenDeleted) {
+      return new ResponseDTO(HttpStatus.OK, 'User has been deleted', 'Usuário deletado com sucesso');
+    }
+    return new ResponseDTO(HttpStatus.NOT_FOUND, 'Failed to delete user', 'Falha ao deletar usuário');
+  }
+
+  @Patch()
+  async update(@Req() request: RequestHeaderType, @Body() body: UpdateUserDTO) {
+    if (request.payloadDTO.id !== body.id) return new ResponseDTO(HttpStatus.UNAUTHORIZED, 'User cant be updated, not your user.', 'Não foi possível atualizar o usuário');
+
+    const user = await this.userService.update(body);
+    if (!user) {
+      return new ResponseDTO(HttpStatus.NOT_FOUND, 'Failed to update user', 'Falha ao editar usuário');
+    }
+    return new ResponseDTO(HttpStatus.OK, 'User updated successfully', 'Usuário atualizado com sucesso', user);
   }
 
   @JWT(false)
