@@ -19,7 +19,7 @@ export class AppointmentEntity {
   @Column({ name: 'appointment_date', type: 'text', nullable: false })
   appointment_date: string; // dd/mm/yyyy
 
-  @ManyToOne(() => UserEntity, (user) => user.appointments)
+  @ManyToOne(() => UserEntity, (user) => user.appointments, { onDelete: 'CASCADE' })
   @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   user: UserEntity;
 
