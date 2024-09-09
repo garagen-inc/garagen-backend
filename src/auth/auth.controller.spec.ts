@@ -9,7 +9,7 @@ import { UserDTO } from 'src/user/dtos/user.dto';
 const user = new UserDTO(1, 'name', 'email', 'phone', 'cpf', true, null, null);
 const loginResponse = new LoginResponseDTO('access_token', user);
 
-const loginResponseDTO = new ResponseDTO(HttpStatus.OK, 'Authenticated with success', 'Autenticado com sucesso', );
+const loginResponseDTO = new ResponseDTO(HttpStatus.OK, 'Authenticated with success', 'Autenticado com sucesso', Date.now());
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -27,6 +27,7 @@ describe('AuthController', () => {
     }).compile();
 
     authController = app.get<AuthController>(AuthController);
+    authService = app.get<AuthService>(AuthService)
   });
 
   it('should be defined', () => {
@@ -35,7 +36,7 @@ describe('AuthController', () => {
   });
   describe('login', () => {
     it('should return login', async () => {
-      const login = await authController.login({ email: 'email', password: 'password' });
+      const login = await authController.login(user);
       expect(login).toEqual(loginResponseDTO);
       expect(authService.login).toHaveBeenCalledTimes(1);
     });
