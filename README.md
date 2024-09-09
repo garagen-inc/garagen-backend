@@ -83,44 +83,44 @@ yarn test
 
 ### Criação de Agendamentos (`createAppointment`)
 
-1. **Verificação de slot disponível**:
+1. Verificação de slot disponível:
 
    - Se o slot disponível para o dia especificado não for encontrado, um erro é lançado: `Available slot not found for the specified day`.
 
-2. **Horário do agendamento fora do intervalo**:
+2. Horário do agendamento fora do intervalo:
 
    - Se o horário do agendamento estiver fora do intervalo do slot disponível, um erro é lançado: `Appointment time is outside the available slot range`.
 
-3. **Slot ocupado**:
+3. Slot ocupado:
 
    - Se o slot disponível já estiver ocupado, um erro é lançado: `The available slot is already occupied`.
 
-4. **Criação bem-sucedida**:
+4. Criação bem-sucedida:
    - Um agendamento é criado com sucesso se todas as validações forem atendidas.
 
 ### Listagem de Agendamentos (`listAppointments`)
 
-1. **Retorno de lista de agendamentos**:
+1. Retorno de lista de agendamentos:
    - Retorna a lista de agendamentos para um workshop específico.
-2. **Resultado vazio**:
+2. Resultado vazio:
    - Se não houver agendamentos, retorna uma lista vazia.
 
 ### Busca de um Agendamento (`findOne`)
 
-1. **Retorno de um agendamento específico**:
+1. Retorno de um agendamento específico:
    - Retorna um agendamento baseado no ID fornecido.
-2. **Resultado indefinido**:
+2. Resultado indefinido:
    - Se o agendamento não for encontrado, retorna `undefined`.
 
 ### Exclusão de Agendamentos (`delete`)
 
-1. **Deleção de agendamento**:
+1. Deleção de agendamento:
 
    - Remove um agendamento baseado no ID fornecido. Após a remoção, a lista de agendamentos é atualizada.
 
-2. **Deleções concorrentes**:
+2. Deleções concorrentes:
 
    - Lida com exclusões concorrentes, retornando `true` ou `false` dependendo da conclusão ou falha da deleção.
 
-3. **Entrada inválida para `appointmentId`**:
+3. Entrada inválida para `appointmentId`:
    - Se um ID inválido for fornecido, o método de exclusão retorna `false`.
