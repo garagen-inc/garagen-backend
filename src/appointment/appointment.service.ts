@@ -87,9 +87,9 @@ export class AppointmentService {
       appointment_date,
     });
 
-    const savedAppointment = await this.appointmentRepository.save(appointmentEntity);
-    const appointment = await this.appointmentRepository.findOne({ where: { id: savedAppointment.id }, relations: ['user'] });
-
+    const appointment = await this.appointmentRepository.save(appointmentEntity);
+    console.log(appointment);
+    // const appointment = await this.appointmentRepository.findOne({ where: { id: savedAppointment.id }, relations: ['user'] });
     return new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.user.name, appointment.workshop_id, appointment.appointment_date);
   }
 

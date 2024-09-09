@@ -10,6 +10,17 @@ import { UserEntity } from 'src/user/user.entity';
 import { WorkshopEntity } from 'src/workshop/workshop.entity';
 import { AppointmentDTO } from './dtos/appointment.dto';
 
+const mockUser = {
+  id: 1,
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  phone: '1234567890',
+  cpf: '123.456.789-00',
+  password: 'hashedPassword123',
+  isWorkshopOwner: false,
+  workshop_id: null,
+};
+
 describe('AppointmentService', () => {
   let service: AppointmentService;
   let appointmentRepository: Repository<AppointmentEntity>;
@@ -145,6 +156,7 @@ describe('AppointmentService', () => {
         user_id: 1,
         workshop_id: 1,
         appointment_date: '10/10/2010',
+        user: mockUser,
       } as any);
 
       const createAppointmentDTO: CreateAppointmentDTO = {
@@ -165,6 +177,7 @@ describe('AppointmentService', () => {
         user_id: 1,
         workshop_id: 1,
         appointment_date: '10/10/2010',
+        user_name: mockUser.name,
       });
     });
   });
@@ -172,14 +185,15 @@ describe('AppointmentService', () => {
   describe('listAppointments', () => {
     it('should return a list of appointments', async () => {
       const mockAppointments = [
-        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' },
-        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' },
+        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024', user: mockUser },
+        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024', user: mockUser },
       ];
 
       jest.spyOn(appointmentRepository, 'find').mockResolvedValue(mockAppointments as any);
 
       const expectedAppointments = mockAppointments.map(
-        (appointment) => new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.workshop_id, appointment.appointment_date),
+        (appointment) =>
+          new AppointmentDTO(appointment.id, appointment.start_time, appointment.final_time, appointment.user_id, appointment.user.name, appointment.workshop_id, appointment.appointment_date),
       );
       const appointments = await service.list(1);
       expect(appointments).toEqual(expectedAppointments);
@@ -195,7 +209,7 @@ describe('AppointmentService', () => {
 
   describe('findOne', () => {
     it('should return a appointment', async () => {
-      const mockAppointment = { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' };
+      const mockAppointment = { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024', user: mockUser };
 
       jest.spyOn(appointmentRepository, 'findOne').mockResolvedValue(mockAppointment as any);
 
@@ -204,6 +218,7 @@ describe('AppointmentService', () => {
         mockAppointment.start_time,
         mockAppointment.final_time,
         mockAppointment.user_id,
+        mockAppointment.user.name,
         mockAppointment.workshop_id,
         mockAppointment.appointment_date,
       );
@@ -222,11 +237,11 @@ describe('AppointmentService', () => {
   describe('delete', () => {
     it('should handle delete', async () => {
       const mockAppointments = [
-        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024' },
-        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' },
+        { id: 1, start_time: '09:00', final_time: '10:00', user_id: 1, workshop_id: 1, appointment_date: '10/10/2024', user: mockUser },
+        { id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024', user: mockUser },
       ];
 
-      const mockAppointmentsAfterDelete = [{ id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024' }];
+      const mockAppointmentsAfterDelete = [{ id: 2, start_time: '10:00', final_time: '11:00', user_id: 2, workshop_id: 1, appointment_date: '11/10/2024', user: mockUser }];
 
       jest.spyOn(appointmentRepository, 'findOne').mockResolvedValueOnce(mockAppointments[0] as any);
       jest.spyOn(appointmentRepository, 'delete').mockResolvedValueOnce(undefined);
