@@ -72,11 +72,6 @@ yarn test
 - Available Slots
 - Appointments
 
-### Os seguintes Controllers foram testados:
-
-- Available Slots
-- Auth
-
 ## Testes e regras de negócio do service Appointments
 
 `src/appointment/appointment.spec.ts`
