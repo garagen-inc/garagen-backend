@@ -77,7 +77,9 @@ yarn test
 - Available Slots
 - Auth
 
-## Regras de negócio do service Appointments
+## Testes e regras de negócio do service Appointments
+
+`src/appointment/appointment.spec.ts`
 
 ### Criação de Agendamentos (`createAppointment`)
 
