@@ -67,12 +67,12 @@ yarn docker
 yarn test
 ```
 
-## Os seguintes Services foram testados:
+### Os seguintes Services foram testados:
 
 - Available Slots
 - Appointments
 
-## Os seguintes Controllers foram testados:
+### Os seguintes Controllers foram testados:
 
 - Available Slots
 - Auth
