@@ -77,9 +77,9 @@ yarn test
 - Available Slots
 - Auth
 
-# Regras de negócio do service Appointments
+## Regras de negócio do service Appointments
 
-## Criação de Agendamentos (`createAppointment`)
+### Criação de Agendamentos (`createAppointment`)
 
 1. **Verificação de slot disponível**:
 
@@ -96,21 +96,21 @@ yarn test
 4. **Criação bem-sucedida**:
    - Um agendamento é criado com sucesso se todas as validações forem atendidas.
 
-## Listagem de Agendamentos (`listAppointments`)
+### Listagem de Agendamentos (`listAppointments`)
 
 1. **Retorno de lista de agendamentos**:
    - Retorna a lista de agendamentos para um workshop específico.
 2. **Resultado vazio**:
    - Se não houver agendamentos, retorna uma lista vazia.
 
-## Busca de um Agendamento (`findOne`)
+### Busca de um Agendamento (`findOne`)
 
 1. **Retorno de um agendamento específico**:
    - Retorna um agendamento baseado no ID fornecido.
 2. **Resultado indefinido**:
    - Se o agendamento não for encontrado, retorna `undefined`.
 
-## Exclusão de Agendamentos (`delete`)
+### Exclusão de Agendamentos (`delete`)
 
 1. **Deleção de agendamento**:
 
