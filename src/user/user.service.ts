@@ -15,6 +15,7 @@ import { AddressDTO } from 'src/address/dtos/address.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 import { LoginResponseDTO } from 'src/auth/dto/login-response.dto';
 import { AuthService } from 'src/auth/auth.service';
+import { ChangePasswordUserDTO } from './dtos/change-password-user.dto';
 
 @Injectable()
 export class UserService {
@@ -101,7 +102,7 @@ export class UserService {
   }
 
   async update(updateUserDTO: UpdateUserDTO): Promise<LoginResponseDTO | null> {
-    const { name, id, cpf, email, password, phone } = updateUserDTO;
+    const { name, id, cpf, email, phone } = updateUserDTO;
     const user = await this.userRepository.findOne({
       where: { id },
     });
@@ -113,7 +114,6 @@ export class UserService {
     if (name) user.name = name;
     if (cpf) user.cpf = cpf;
     if (email) user.email = email;
-    if (password) user.password = password;
     if (phone) user.phone = phone;
 
     await this.userRepository.save(user);
@@ -131,5 +131,26 @@ export class UserService {
     );
 
     return loginResponse;
+  }
+  async changePassword(changePassword: ChangePasswordUserDTO): Promise<UserDTO | null> {
+    const { id, password } = changePassword;
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    user.password = await bcrypt.hash(password, this.saltRounds);
+
+    await this.userRepository.save(user);
+
+    const userUpdated = await this.userRepository.findOne({
+      where: { id },
+      relations: ['workshop', 'appointments'],
+    });
+
+    return new UserDTO(userUpdated.id, userUpdated.name, userUpdated.email, userUpdated.phone, userUpdated.cpf, true, userUpdated.workshop_id, userUpdated.workshop, userUpdated.appointments);
   }
 }

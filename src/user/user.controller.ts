@@ -6,6 +6,7 @@ import { JWT } from 'src/decorators/jwt.decorator';
 import { CreateWorkshopOwnerUserDTO } from './dtos/create-workshop-owner-user.dto';
 import { UpdateUserDTO } from './dtos/update-user.dto';
 import { RequestHeaderType } from 'src/utils/types/types';
+import { ChangePasswordUserDTO } from './dtos/change-password-user.dto';
 
 @Controller('users')
 export class UserController {
@@ -34,6 +35,17 @@ export class UserController {
       return new ResponseDTO(HttpStatus.NOT_FOUND, 'Failed to update user', 'Falha ao editar usuário');
     }
     return new ResponseDTO(HttpStatus.OK, 'User updated successfully', 'Usuário atualizado com sucesso', user);
+  }
+
+  @Patch('change-password')
+  async changePassword(@Req() request: RequestHeaderType, @Body() body: ChangePasswordUserDTO) {
+    if (String(request.payloadDTO.id) !== String(body.id)) return new ResponseDTO(HttpStatus.UNAUTHORIZED, 'User cant be updated, not your user.', 'Não foi possível atualizar o usuário');
+
+    const user = await this.userService.changePassword(body);
+    if (!user) {
+      return new ResponseDTO(HttpStatus.NOT_FOUND, "Failed to update user's password", 'Falha ao atualizar senha do usuário');
+    }
+    return new ResponseDTO(HttpStatus.OK, 'User updated successfully', 'Sua senha foi alterada com sucesso!', user);
   }
 
   @JWT(false)

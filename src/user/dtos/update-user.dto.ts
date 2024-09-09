@@ -6,7 +6,6 @@ export class UpdateUserDTO {
   email?: string;
   phone?: string;
   cpf?: string;
-  password?: string;
 
   constructor(id: number, updateData: Partial<CreateUserDTO>) {
     this.id = id;
@@ -14,6 +13,5 @@ export class UpdateUserDTO {
     if (updateData.email) this.email = updateData.email;
     if (updateData.phone) this.phone = updateData.phone;
     if (updateData.cpf) this.cpf = updateData.cpf;
-    if (updateData.password) this.password = updateData.password;
   }
 }
