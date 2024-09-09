@@ -11,6 +11,6 @@ RUN yarn build
 
 COPY database.sqlite dist/
 
-EXPOSE 3000
+EXPOSE 3001
 
 CMD ["node", "dist/main.js"]
