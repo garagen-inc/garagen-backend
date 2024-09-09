@@ -138,47 +138,77 @@ describe('AppointmentService', () => {
       await expect(service.createAppointment(createAppointmentDTO)).rejects.toThrow(new BadRequestException('The available slot is already occupied'));
     });
 
-    it('should create an appointment successfully', async () => {
-      jest.spyOn(availableSlotRepository, 'findOne').mockResolvedValue({
-        id: 1,
-        workshopId: 1,
-        day: 'mon',
-        startTime: '08:00',
-        finalTime: '12:00',
-        appointment_date: '10/10/2010',
-      } as any);
-
-      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValue(null);
-      jest.spyOn(appointmentRepository, 'save').mockResolvedValue({
-        id: 1,
-        start_time: '09:00',
-        final_time: '10:00',
-        user_id: 1,
-        workshop_id: 1,
-        appointment_date: '10/10/2010',
-        user: mockUser,
-      } as any);
-
+    it('should successfully create an appointment', async () => {
       const createAppointmentDTO: CreateAppointmentDTO = {
         start_time: '09:00',
         final_time: '10:00',
         user_id: 1,
-        day: 'mon',
         workshop_id: 1,
-        appointment_date: '10/10/2010',
+        day: 'mon',
+        appointment_date: '2024-09-10',
       };
 
-      const result = await service.createAppointment(createAppointmentDTO);
+      const mockAvailableSlot: AvailableSlotEntity = {
+        id: 1,
+        startTime: '08:00',
+        finalTime: '12:00',
+        workshopId: 1,
+        day: 'mon',
+        workshop: {} as any,
+        deletedAt: null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
 
-      expect(result).toEqual({
+      const mockAppointmentEntity: AppointmentEntity = {
         id: 1,
         start_time: '09:00',
         final_time: '10:00',
         user_id: 1,
         workshop_id: 1,
-        appointment_date: '10/10/2010',
-        user_name: mockUser.name,
+        appointment_date: '2024-09-10',
+        user: { id: 1, name: 'John Doe' } as UserEntity,
+        workshop: {} as any,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
+
+      jest.spyOn(availableSlotRepository, 'findOne').mockResolvedValue(mockAvailableSlot);
+
+      jest.spyOn(appointmentRepository, 'findOne').mockResolvedValueOnce(null).mockResolvedValueOnce(mockAppointmentEntity);
+
+      jest.spyOn(appointmentRepository, 'create').mockReturnValue(mockAppointmentEntity);
+      jest.spyOn(appointmentRepository, 'save').mockResolvedValue(mockAppointmentEntity);
+
+      const result = await service.createAppointment(createAppointmentDTO);
+
+      expect(result).toEqual(
+        new AppointmentDTO(
+          mockAppointmentEntity.id,
+          mockAppointmentEntity.start_time,
+          mockAppointmentEntity.final_time,
+          mockAppointmentEntity.user_id,
+          mockAppointmentEntity.user.name,
+          mockAppointmentEntity.workshop_id,
+          mockAppointmentEntity.appointment_date,
+        ),
+      );
+
+      expect(availableSlotRepository.findOne).toHaveBeenCalledWith({
+        where: { workshopId: createAppointmentDTO.workshop_id, day: createAppointmentDTO.day },
       });
+
+      expect(appointmentRepository.create).toHaveBeenCalledWith({
+        start_time: createAppointmentDTO.start_time,
+        final_time: createAppointmentDTO.final_time,
+        user_id: createAppointmentDTO.user_id,
+        workshop_id: createAppointmentDTO.workshop_id,
+        appointment_date: createAppointmentDTO.appointment_date,
+      });
+
+      expect(appointmentRepository.save).toHaveBeenCalledWith(mockAppointmentEntity);
+      expect(appointmentRepository.findOne).toHaveBeenCalledWith({ where: { id: mockAppointmentEntity.id }, relations: ['user'] });
     });
   });
 
