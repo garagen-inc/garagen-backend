@@ -11,8 +11,7 @@ O código principal está dentro de "src".
 
 Vamos exemplificar o padrão de projeto **Decorator** criado no arquivo `src/decorators/jwt.decorator.ts` (https://github.com/garager-inc/garager-backend/blob/main/src/decorators/jwt.decorator.ts) presente em todos (quase todos) os Controllers da API.
 
-A função do decorator é facilitar a remoção do uso de rotas que precisam de autenticação para funcionar.
-Quando declarado:
+A função do decorator JWT é facilitar a remoção da necessidade de autenticação para acessar determinadas rotas.
 
 ```ts
 @JWT(false)
